@@ -1,8 +1,7 @@
 {
-  "name": "@monorepo-template/scripts",
+  "name": "@platform-organizations/scripts",
   "version": "0.0.0",
   "dependencies": {
-    "@monorepo-template/core": "*",
     "sst": "*"
   },
   "scripts": {

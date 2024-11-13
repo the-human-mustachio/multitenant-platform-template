@@ -1,7 +1,8 @@
 {
-  "name": "@monorepo-template/core",
+  "name": "@platform-organizations/core",
   "version": "0.0.0",
   "scripts": {
+    "shell": "sst shell tsx",
     "test": "sst shell vitest"
   },
   "exports": {
@@ -11,9 +12,10 @@
     ]
   },
   "dependencies": {
-    "sst": "*"
+    "sst": "*",
+    "tsx": "^4.19.2"
   },
   "devDependencies": {
-    "vitest": "^2.0.3"
+    "vitest": "^2.1.4"
   }
 }

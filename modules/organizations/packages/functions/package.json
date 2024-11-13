@@ -1,9 +1,9 @@
 {
-  "name": "@monorepo-template/functions",
+  "name": "@platform-organizations/functions",
   "version": "0.0.0",
   "dependencies": {
-    "@monorepo-template/core": "*",
-    "sst": "*"
+    "sst": "*",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.137"

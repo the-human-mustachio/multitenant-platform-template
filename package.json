@@ -1,8 +1,9 @@
 {
-  "name": "monorepo-template",
+  "name": "platform-template",
   "version": "0.0.0",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "modules/*"
   ],
   "scripts": {},
   "devDependencies": {
@@ -10,6 +11,9 @@
     "typescript": "5.6.2"
   },
   "dependencies": {
-    "sst": "^3"
+    "sst": "^3",
+    "zod": "^3.23.8",
+    "@aws-sdk/lib-dynamodb": "^3.685.0",
+    "dynamodb-onetable": "^2.7.5"
   }
 }
