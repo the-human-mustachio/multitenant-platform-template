@@ -5,15 +5,15 @@ import { z } from "zod";
 import { APIRouter } from "./router";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { Resource } from "sst";
-import { createNewUserAndOrganization } from "@platform-organizations/core/useCases/useCases";
-import { generateAndAssumePolicy } from "@platform-organizations/core/domain/tvm/main";
+import { AggregateUseCases } from "@platform-organizations/core/useCases/aggregateUseCases";
+import { TVMUseCases } from "@platform-organizations/core/useCases/tvmUseCases";
 
 // Lambda router handler
 const apiRouter = new APIRouter();
 
 // Define routes
 apiRouter.addRoute("GET", "/user/test", async ({ pathParams, queryParams }) => {
-  const tenantScope = await generateAndAssumePolicy(
+  const tenantScope = await TVMUseCases.generateAndAssumePolicy(
     "matt@sparkcx.co",
     "01JDATQVTAQ3V003004AMPA300"
   );
@@ -78,7 +78,7 @@ apiRouter.addRoute(
     // check is user already exists
 
     // create new user with default workspace using the users email as their workspace name
-    const result = await createNewUserAndOrganization({
+    const result = await AggregateUseCases.createNewUserAndOrganization({
       firstName: data.firstName,
       lastName: data.lastName,
       userEmail: data.userEmail,

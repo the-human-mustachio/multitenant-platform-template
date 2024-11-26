@@ -1,20 +1,18 @@
-// main.ts
+import { z } from "zod";
+import { DynamoDBAdapter } from "../adapters/dynamoDBAdapter";
 import {
   validateUserInput,
   createUserEntity,
   toUserDTO,
-} from "./userFunctions";
-import { createUserRepository } from "./userRepository";
-import { z } from "zod";
-import { UserStatus } from "./userTypes";
-import { DynamoDBAdapter } from "../../adapters/dynamoDBAdapter";
+} from "../domain/user/userFunctions";
+import { createUserRepository } from "../domain/user/userRepository";
+import { UserStatus } from "../domain/user/userTypes";
+
+const saveUserFn = DynamoDBAdapter.upsertUser();
+const getUserByIdFn = DynamoDBAdapter.getUserByEmail();
+const userRepository = createUserRepository(saveUserFn, getUserByIdFn);
 
 const main = async () => {
-  // Use the in-memory save function and pass it to the repository
-  const saveUserFn = DynamoDBAdapter.upsertUser();
-  const getUserByIdFn = DynamoDBAdapter.getUserByEmail();
-  const userRepository = createUserRepository(saveUserFn, getUserByIdFn);
-
   try {
     // Step 1: Validate Input
     const userInput = {
@@ -50,5 +48,3 @@ const main = async () => {
     }
   }
 };
-
-main();

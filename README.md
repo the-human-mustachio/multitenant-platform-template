@@ -42,7 +42,7 @@ This project is designed so that there is a global platform concept which houses
 ### Product Applications
 
 `modules/<product>/infra` all infrastructure related code for the specific product application \
-`modules/<product>/packages` all application related code for the specific product application \
+`modules/<product>/packages` all application related code for the specific product application
 
 ## Usage
 
@@ -52,21 +52,9 @@ This template uses [npm Workspaces](https://docs.npmjs.com/cli/v8/using-npm/work
 
    This is for any shared code. It's defined as modules. For example, there's the `Example` module.
 
-   ```ts
-   export module Example {
-     export function hello() {
-       return "Hello, world!";
-     }
-   }
-   ```
-
-   That you can use across other packages using.
-
-   ```ts
-   import { Example } from "@aws-monorepo/core/example";
-
-   Example.hello();
-   ```
+   `core/src/adapters` this is used for all adapters for specific resource level implmentations\
+   `core/src/domain` this is where the domain level code which is agnostic to the cloud provider\
+   `core/src/useCases` this is the orchestration between all the entities, repositories and business logic
 
 2. `functions/`
 
