@@ -14,13 +14,17 @@ export default $config({
     };
   },
   async run() {
-    await import("./infra/storage");
-    const organizations = await import(
-      "./modules/organizations/infra/organizations"
-    );
+    const {
+      globalPlatformApi,
+      globalPlatformBucket,
+      globalPlatformTable,
+      userOrgScoppedAssumeRole,
+    } = await import("./modules/global-platform/infra/index");
+    // const storage = await import("./modules/global-platform/infra/storage");
+    // const api = await import("./modules/global-platform/infra/api");
 
     return {
-      // api: api.api.url,
+      platformBucketArn: globalPlatformBucket.arn,
     };
   },
 });

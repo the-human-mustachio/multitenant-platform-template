@@ -1,0 +1,21 @@
+{
+  "name": "@platform-organizations/core",
+  "version": "0.0.0",
+  "scripts": {
+    "shell": "sst shell tsx",
+    "test": "sst shell vitest"
+  },
+  "exports": {
+    "./*": [
+      "./src/*/index.ts",
+      "./src/*.ts"
+    ]
+  },
+  "dependencies": {
+    "sst": "3.3.27",
+    "tsx": "^4.19.2"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.4"
+  }
+}
