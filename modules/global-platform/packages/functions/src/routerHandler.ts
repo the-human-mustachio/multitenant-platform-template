@@ -1,6 +1,4 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-// import { createNewUserAndOrganization } from "../../core/src/useCases/useCases";
-// import { generateAndAssumePolicy } from "../../core/src/domain/tvm/main";
 import { z } from "zod";
 import { APIRouter } from "./router";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
@@ -12,32 +10,19 @@ import { TVMUseCases } from "@platform-organizations/core/useCases/tvmUseCases";
 const apiRouter = new APIRouter();
 
 // Define routes
+// =========== Route 1
 apiRouter.addRoute("GET", "/user/test", async ({ pathParams, queryParams }) => {
-  const tenantScope = await TVMUseCases.generateAndAssumePolicy(
-    "matt@sparkcx.co",
-    "01JDATQVTAQ3V003004AMPA300"
-  );
-  const files = await listS3BucketContents(
-    Resource.GlobalPlatformBucket.name,
-    {
-      accessKeyId: tenantScope.accessKeyId,
-      secretAccessKey: tenantScope.secretAccessKey,
-      sessionToken: tenantScope.sessionToken,
-      region: "us-west-2",
-    },
-    ""
-  );
-  console.log(files);
-
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: `Fetched user with ID: ${files}`,
+      message: `Success`,
       queryParams,
     }),
   };
 });
+// =========== End Route 1
 
+// =========== Route 2
 const CreateNewUserAndOrganizationSchema = z.object({
   firstName: z
     .string()
@@ -92,6 +77,7 @@ apiRouter.addRoute(
     };
   }
 );
+// =========== End Route 2
 
 interface S3ClientConfig {
   accessKeyId: string;
