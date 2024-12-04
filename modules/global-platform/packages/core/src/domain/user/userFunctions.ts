@@ -15,6 +15,7 @@ export const validateUserInput = (
 export const createUserEntity = (
   validatedInput: z.infer<typeof UserEntityInputSchema>
 ): UserEntity => ({
+  id: validatedInput.email,
   firstName: validatedInput.firstName,
   lastName: validatedInput.lastName,
   status: validatedInput.status,

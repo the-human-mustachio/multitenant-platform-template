@@ -4,7 +4,10 @@ import { APIRouter } from "./router";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { Resource } from "sst";
 import { AggregateUseCases } from "@platform-organizations/core/useCases/aggregateUseCases";
-import { TVMUseCases } from "@platform-organizations/core/useCases/tvmUseCases";
+import { UserUseCases } from "@platform-organizations/core/useCases/userUseCases";
+import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
+import { render } from "jsx-email";
+import { Template } from "./templates/email";
 
 // Lambda router handler
 const apiRouter = new APIRouter();
@@ -78,6 +81,59 @@ apiRouter.addRoute(
   }
 );
 // =========== End Route 2
+
+// =========== Route 3
+apiRouter.addRoute("GET", "/user/email", async () => {
+  const client = new SESv2Client();
+  const command = new SendEmailCommand({
+    FromEmailAddress: Resource.GlobalPlatformEmail.sender,
+    FromEmailAddressIdentityArn: `arn:aws:ses:us-west-2:471112703072:identity/${Resource.GlobalPlatformEmail.sender}`,
+    Destination: {
+      ToAddresses: [Resource.GlobalPlatformEmail.sender],
+    },
+    Content: {
+      Simple: {
+        Subject: {
+          Data: "Hello World!",
+        },
+        Body: {
+          Html: {
+            Data: await render(
+              Template({
+                email: "matt+platform-template-mattpuccio@sparkcx.co",
+                name: "Spongebob Squarepants",
+              })
+            ),
+          },
+        },
+      },
+    },
+  });
+  await client.send(command);
+
+  return {
+    statusCode: 200,
+    body: "Sent!",
+  };
+});
+// =========== End Route 2
+
+// =========== Route 4
+apiRouter.addRoute(
+  "GET",
+  "/user/users",
+  async ({ pathParams, queryParams, body }) => {
+    // create new user with default workspace using the users email as their workspace name
+    const result = await UserUseCases.listAllUsersUseCase();
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        result,
+      }),
+    };
+  }
+);
+// =========== End Route 4
 
 interface S3ClientConfig {
   accessKeyId: string;

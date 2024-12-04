@@ -1,5 +1,5 @@
 // userRepository.ts
-import { UserEntity } from "./userTypes";
+import { UserEntity, UserEntityDTO } from "./userTypes";
 
 export type SaveUserFunction = (user: UserEntity) => Promise<UserEntity>;
 
@@ -13,12 +13,14 @@ export type UpdateUserByIdFunction = (
 ) => Promise<UserEntity | undefined>;
 
 export type RemoveUserByIdFunction = (id: string) => Promise<boolean>;
+export type ListUsersFunction = () => Promise<UserEntity[]>;
 
 export const createUserRepository = (
   saveUserFn?: SaveUserFunction,
   getUserByIdFn?: GetUserByIdFunction,
   updateUserByIdFn?: UpdateUserByIdFunction,
-  removeUserByIdFn?: RemoveUserByIdFunction
+  removeUserByIdFn?: RemoveUserByIdFunction,
+  listUsersFn?: ListUsersFunction
 ) => ({
   saveUser: (user: UserEntity) => {
     if (!saveUserFn) {
@@ -43,5 +45,11 @@ export const createUserRepository = (
       throw new Error("removeUserById function is not provided");
     }
     return removeUserByIdFn(id);
+  },
+  listUsers: () => {
+    if (!listUsersFn) {
+      throw new Error("listUsers function is not provided");
+    }
+    return listUsersFn();
   },
 });

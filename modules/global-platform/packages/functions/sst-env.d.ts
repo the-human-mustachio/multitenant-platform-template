@@ -6,6 +6,10 @@ import "sst"
 export {}
 declare module "sst" {
   export interface Resource {
+    "AdminWebsite": {
+      "type": "sst.aws.StaticSite"
+      "url": string
+    }
     "GlobalPlatformApi": {
       "type": "sst.aws.ApiGatewayV2"
       "url": string
@@ -13,6 +17,11 @@ declare module "sst" {
     "GlobalPlatformBucket": {
       "name": string
       "type": "sst.aws.Bucket"
+    }
+    "GlobalPlatformEmail": {
+      "configSet": string
+      "sender": string
+      "type": "sst.aws.Email"
     }
     "GlobalPlatformTable": {
       "name": string

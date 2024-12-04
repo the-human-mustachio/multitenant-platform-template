@@ -4,6 +4,7 @@ export enum UserStatus {
 }
 
 export type UserEntity = {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -13,6 +14,7 @@ export type UserEntity = {
 };
 
 export type UserEntityDTO = {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;

@@ -11,7 +11,8 @@ export const schema = {
   version: "0.0.1",
   indexes: {
     primary: { hash: "pk", sort: "sk" },
-    gs1: { hash: "gs1pk", sort: "gs1sk", follow: true },
+    gsi1: { hash: "gsi1pk", sort: "gsi1sk", follow: true },
+    adminGSI1: { hash: "adminGSI1pk", sort: "adminGSI1sk", follow: true },
   },
   models: {
     Organization: {
@@ -24,15 +25,17 @@ export const schema = {
       },
       name: { type: String, required: true },
       status: { type: String, default: "active", enum: ["active", "inactive"] },
+      adminGSI1pk: { type: String, value: "organization" },
+      adminGSI1sk: { type: String, value: "organization#${id}" },
     },
     User: {
-      pk: { type: String, value: "${email}#user" },
+      pk: { type: String, value: "${id}#user" },
       sk: { type: String, value: "user#" },
-      // id: {
-      //   type: String,
-      //   // generate: "ulid",
-      //   validate: /^[0123456789ABCDEFGHJKMNPQRSTVWXYZ]{26}$/i,
-      // },
+      id: {
+        type: String,
+        // generate: "ulid",
+        validate: /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/,
+      },
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
       email: {
@@ -42,6 +45,8 @@ export const schema = {
         validate: /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/,
       },
       status: { type: String, default: "active", enum: ["active", "inactive"] },
+      adminGSI1pk: { type: String, value: "user" },
+      adminGSI1sk: { type: String, value: "user#${id}" },
     },
     Membership: {
       pk: { type: String, value: "shared#${email}#membership" },
@@ -55,8 +60,8 @@ export const schema = {
         required: true,
       },
       role: { type: String, default: "user", required: true },
-      gs1pk: { type: String, value: "shared#${organizationId}#org" },
-      gs1sk: { type: String, value: "membership#${email}" },
+      gsi1pk: { type: String, value: "shared#${organizationId}#org" },
+      gs1isk: { type: String, value: "membership#${email}" },
     },
   },
   params: {
@@ -91,7 +96,7 @@ export namespace DynamoDBAdapter {
       try {
         console.log("User upsert successfully in DynamoDB with OneTable.");
         return (await UserModel.upsert({
-          // id: user.id,
+          id: user.id,
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
@@ -109,6 +114,19 @@ export namespace DynamoDBAdapter {
       try {
         console.log("User get successfully in DynamoDB with OneTable.");
         return (await UserModel.get({ email: userEmail })) as UserEntityDTO;
+      } catch (error) {
+        console.error("Error getting user in DynamoDB with OneTable:", error);
+        throw error;
+      }
+    };
+  };
+
+  export const listUsers = () => {
+    return async (): Promise<UserEntityDTO[]> => {
+      try {
+        console.log("User get successfully in DynamoDB with OneTable.");
+        const r = await UserModel.scan({});
+        return r as UserEntityDTO[];
       } catch (error) {
         console.error("Error getting user in DynamoDB with OneTable:", error);
         throw error;
