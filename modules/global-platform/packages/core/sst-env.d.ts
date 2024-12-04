@@ -10,6 +10,15 @@ declare module "sst" {
       "type": "sst.aws.StaticSite"
       "url": string
     }
+    "Auth": {
+      "publicKey": string
+      "type": "sst.aws.Auth"
+    }
+    "AuthAuthenticator": {
+      "name": string
+      "type": "sst.aws.Function"
+      "url": string
+    }
     "GlobalPlatformApi": {
       "type": "sst.aws.ApiGatewayV2"
       "url": string
@@ -26,6 +35,10 @@ declare module "sst" {
     "GlobalPlatformTable": {
       "name": string
       "type": "sst.aws.Dynamo"
+    }
+    "GoogleClientID": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
     "UserOrgScoppedAssumeRole": {
       "assumeRoleArn": string

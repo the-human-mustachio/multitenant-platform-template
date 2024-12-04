@@ -19,12 +19,14 @@ export default $config({
       globalPlatformBucket,
       globalPlatformTable,
       userOrgScoppedAssumeRole,
+      auth,
     } = await import("./modules/global-platform/infra/index");
     // const storage = await import("./modules/global-platform/infra/storage");
     // const api = await import("./modules/global-platform/infra/api");
 
     return {
       platformBucketArn: globalPlatformBucket.arn,
+      url: auth.url,
     };
   },
 });

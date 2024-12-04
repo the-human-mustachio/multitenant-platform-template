@@ -59,12 +59,17 @@ export namespace AggregateUseCases {
     const _userInput = validateUserInput(userInput);
     const newUser = createUserEntity(_userInput);
 
-    // Step 3: Create and Validate  Org  Entity
+    const existingUser = await userRepository.getUserById(_userInput.email);
+    if (existingUser) {
+      return existingUser;
+    }
+
+    // Step 2: Create and Validate  Org  Entity
     const organizationInput = { name: newUser.email, status: "active" };
     const _orgInput = validateOrganizationInput(organizationInput);
     const newOrganization = createOrganizationEntity(_orgInput);
 
-    // Step 4: Create and Validate Membership Entity
+    // Step 3: Create and Validate Membership Entity
     const membershipInput = {
       email: newUser.email,
       organizationId: newOrganization.id,
@@ -74,13 +79,13 @@ export namespace AggregateUseCases {
     const _membershipInput = validateMembershipInput(membershipInput);
     const newMembership = createMembershipEntity(_membershipInput);
 
-    // Step 3: Save User through the repository
+    // Step 4: Save User through the repository
     await userRepository.saveUser(newUser);
 
-    // Step 6: Save Organization through the repository
+    // Step 5: Save Organization through the repository
     await organizationRepository.saveOrganization(newOrganization);
 
-    // Step 3: Save Membership through the repository
+    // Step 6: Save Membership through the repository
     await membershipRepository.saveMembership(newMembership);
     let result: CreateNewUserAndOrganizationResponse = {
       email: newUser.email,

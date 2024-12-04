@@ -113,7 +113,7 @@ export namespace DynamoDBAdapter {
     return async (userEmail: string): Promise<UserEntityDTO> => {
       try {
         console.log("User get successfully in DynamoDB with OneTable.");
-        return (await UserModel.get({ email: userEmail })) as UserEntityDTO;
+        return (await UserModel.get({ id: userEmail })) as UserEntityDTO;
       } catch (error) {
         console.error("Error getting user in DynamoDB with OneTable:", error);
         throw error;
