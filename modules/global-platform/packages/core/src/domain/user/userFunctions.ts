@@ -2,7 +2,6 @@
 import { UserEntity, UserEntityDTO } from "./userTypes";
 import { UserEntityInputSchema } from "./userSchema";
 import { z } from "zod";
-import { ulid } from "ulid";
 
 // Validation function
 export const validateUserInput = (
@@ -22,6 +21,7 @@ export const createUserEntity = (
   email: validatedInput.email,
   created: new Date(),
   updated: new Date(),
+  defaultOrg: "",
 });
 
 // DTO transformation function

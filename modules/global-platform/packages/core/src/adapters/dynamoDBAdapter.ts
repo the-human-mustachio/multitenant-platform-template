@@ -45,6 +45,7 @@ export const schema = {
         validate: /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/,
       },
       status: { type: String, default: "active", enum: ["active", "inactive"] },
+      defaultOrg: { type: String, required: true },
       adminGSI1pk: { type: String, value: "user" },
       adminGSI1sk: { type: String, value: "user#${id}" },
     },
@@ -95,15 +96,18 @@ export namespace DynamoDBAdapter {
     return async (user: UserEntityDTO): Promise<UserEntityDTO> => {
       try {
         console.log("User upsert successfully in DynamoDB with OneTable.");
+        console.log(user);
         return (await UserModel.upsert({
           id: user.id,
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
           status: user.status,
+          defaultOrg: user.defaultOrg,
         })) as UserEntityDTO;
       } catch (error) {
         console.error("Error upsert user in DynamoDB with OneTable:", error);
+        console.error(JSON.stringify(error, null, 4));
         throw error;
       }
     };

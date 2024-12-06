@@ -9,6 +9,7 @@ export type UserEntity = {
   lastName: string;
   email: string;
   status: UserStatus;
+  defaultOrg: string;
   created: Date;
   updated: Date;
 };
@@ -19,6 +20,7 @@ export type UserEntityDTO = {
   lastName: string;
   email: string;
   status: UserStatus;
+  defaultOrg: string;
   created: Date;
   updated: Date;
 };

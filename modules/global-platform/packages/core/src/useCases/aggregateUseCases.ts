@@ -4,17 +4,19 @@ import {
   createMembershipEntity,
 } from "../domain/membership/membershipFunctions";
 import { createMembershipRepository } from "../domain/membership/membershipRepository";
+import { MembershipEntity } from "../domain/membership/membershipTypes";
 import {
   validateOrganizationInput,
   createOrganizationEntity,
 } from "../domain/organization/organizationFunctions";
 import { createOrganizationRepository } from "../domain/organization/organizationRepository";
+import { OrganizationEntity } from "../domain/organization/organizationTypes";
 import {
   validateUserInput,
   createUserEntity,
 } from "../domain/user/userFunctions";
 import { createUserRepository } from "../domain/user/userRepository";
-import { UserStatus } from "../domain/user/userTypes";
+import { UserEntity, UserStatus } from "../domain/user/userTypes";
 
 // User Repo and Adapter Functions
 const saveUserFn = DynamoDBAdapter.upsertUser();
@@ -45,6 +47,16 @@ type CreateNewUserAndOrganizationResponse = {
   memberships: [{ status: string; role: string; org: any }];
 };
 export namespace AggregateUseCases {
+  /**
+   * TODO if user exists this function should return the user, org and membership. Currently today it is only returning the user if they exist already.
+   * If the user and org and memberhsip is created then all three get returned
+   *
+   *
+   * @param props
+   * @returns
+   */
+  // TODO change the name of this usecase
+  // TODO if user exists this function should return the user, org and membership. Currently today it is only returning the user if they exist already. If the user and org and memberhsip is created then all three get returned
   export const createNewUserAndOrganization = async (props: {
     userEmail: string;
     firstName: string;
@@ -57,49 +69,69 @@ export namespace AggregateUseCases {
     };
     // Step 1: Create and Validate User Entity Input
     const _userInput = validateUserInput(userInput);
-    const newUser = createUserEntity(_userInput);
 
     const existingUser = await userRepository.getUserById(_userInput.email);
+    let u: UserEntity | undefined;
+    let o: OrganizationEntity | undefined;
+    let m: MembershipEntity | undefined;
     if (existingUser) {
-      return existingUser;
+      o = await organizationRepository.getOrganizationById(
+        existingUser.defaultOrg
+      );
+
+      u = existingUser;
+
+      // Step 6: Save Membership through the repository
+      m = await membershipRepository.getMembershipByEmailAndOrganizationId(
+        existingUser.email,
+        existingUser.defaultOrg
+      );
+      // return existingUser;
+    } else {
+      // Step 2: Create and Validate  Org  Entity
+      const newUser = createUserEntity(_userInput);
+      const organizationInput = { name: newUser.email, status: "active" };
+      const _orgInput = validateOrganizationInput(organizationInput);
+      const newOrganization = createOrganizationEntity(_orgInput);
+      newUser.defaultOrg = newOrganization.id;
+
+      // Step 3: Create and Validate Membership Entity
+      const membershipInput = {
+        email: newUser.email,
+        organizationId: newOrganization.id,
+        status: "active",
+        role: "admin",
+      };
+      const _membershipInput = validateMembershipInput(membershipInput);
+      const newMembership = createMembershipEntity(_membershipInput);
+
+      // Step 5: Save Organization through the repository
+      o = await organizationRepository.saveOrganization(newOrganization);
+
+      // Step 4: Save User through the repository
+      u = await userRepository.saveUser(newUser);
+
+      // Step 6: Save Membership through the repository
+      m = await membershipRepository.saveMembership(newMembership);
     }
 
-    // Step 2: Create and Validate  Org  Entity
-    const organizationInput = { name: newUser.email, status: "active" };
-    const _orgInput = validateOrganizationInput(organizationInput);
-    const newOrganization = createOrganizationEntity(_orgInput);
-
-    // Step 3: Create and Validate Membership Entity
-    const membershipInput = {
-      email: newUser.email,
-      organizationId: newOrganization.id,
-      status: "active",
-      role: "admin",
-    };
-    const _membershipInput = validateMembershipInput(membershipInput);
-    const newMembership = createMembershipEntity(_membershipInput);
-
-    // Step 4: Save User through the repository
-    await userRepository.saveUser(newUser);
-
-    // Step 5: Save Organization through the repository
-    await organizationRepository.saveOrganization(newOrganization);
-
-    // Step 6: Save Membership through the repository
-    await membershipRepository.saveMembership(newMembership);
-    let result: CreateNewUserAndOrganizationResponse = {
-      email: newUser.email,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      status: newUser.status,
-      memberships: [
-        {
-          status: newMembership.status,
-          role: newMembership.role,
-          org: newOrganization,
-        },
-      ],
-    };
-    return result;
+    if (o && m && u) {
+      let result: CreateNewUserAndOrganizationResponse = {
+        email: u.email,
+        firstName: u.firstName,
+        lastName: u.lastName,
+        status: u.status,
+        memberships: [
+          {
+            status: m.status,
+            role: m.role,
+            org: o,
+          },
+        ],
+      };
+      return result;
+    } else {
+      throw new Error("Error getting user, org, and membership");
+    }
   };
 }

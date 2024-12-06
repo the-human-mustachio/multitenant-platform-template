@@ -8,6 +8,7 @@ export const UserEntitySchema = z.object({
   lastName: z.string().min(1, { message: "Last Name cannot be empty" }),
   email: z.string().email(),
   status: z.nativeEnum(UserStatus),
+  defaultOrg: z.string().min(1, { message: "default Org Id can not be empty" }),
   created: z.date(),
   updated: z.date(),
 });
@@ -15,6 +16,7 @@ export const UserEntitySchema = z.object({
 // Schema for creating a entity
 export const UserEntityInputSchema = UserEntitySchema.omit({
   id: true,
+  defaultOrg: true,
   created: true,
   updated: true,
 });
