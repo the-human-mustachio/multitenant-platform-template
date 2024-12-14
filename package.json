@@ -18,14 +18,18 @@
     "typescript": "5.6.2"
   },
   "dependencies": {
+    "@aws-lambda-powertools/logger": "^2.11.0",
     "@aws-sdk/client-iam": "^3.693.0",
     "@aws-sdk/client-lambda": "^3.696.0",
     "@aws-sdk/client-s3": "^3.696.0",
     "@aws-sdk/client-sesv2": "^3.699.0",
     "@aws-sdk/lib-dynamodb": "^3.685.0",
+    "@openauthjs/openauth": "^0.1.1",
     "dynamodb-onetable": "^2.7.5",
+    "jose": "^5.9.6",
     "jsx-email": "^2.3.5",
-    "sst": "3.3.27",
+    "jwks-rsa": "^3.1.0",
+    "sst": "3.4.1",
     "ulid": "^2.3.0",
     "zod": "^3.23.8"
   }

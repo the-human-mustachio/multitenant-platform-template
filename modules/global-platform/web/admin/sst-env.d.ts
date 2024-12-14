@@ -10,18 +10,13 @@ declare module "sst" {
       "type": "sst.aws.StaticSite"
       "url": string
     }
-    "Auth": {
-      "publicKey": string
-      "type": "sst.aws.Auth"
-    }
-    "AuthAuthenticator": {
-      "name": string
-      "type": "sst.aws.Function"
-      "url": string
-    }
     "GlobalPlatformApi": {
       "type": "sst.aws.ApiGatewayV2"
       "url": string
+    }
+    "GlobalPlatformApiAuthorizerPlatformJWTAuthorizorFunction": {
+      "name": string
+      "type": "sst.aws.Function"
     }
     "GlobalPlatformBucket": {
       "name": string
@@ -39,6 +34,10 @@ declare module "sst" {
     "GoogleClientID": {
       "type": "sst.sst.Secret"
       "value": string
+    }
+    "LambdaAuth": {
+      "type": "sst.aws.Auth"
+      "url": string
     }
     "UserOrgScoppedAssumeRole": {
       "assumeRoleArn": string
