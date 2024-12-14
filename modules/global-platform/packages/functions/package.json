@@ -3,10 +3,9 @@
   "version": "0.0.0",
   "dependencies": {
     "@platform-organizations/core": "file:../core/src",
-    "sst": "3.3.27",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.137"
+    "@types/aws-lambda": "^8.10.146"
   }
 }
