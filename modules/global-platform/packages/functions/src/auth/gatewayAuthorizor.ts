@@ -3,8 +3,9 @@ import {
   APIGatewayRequestAuthorizerEventV2,
   APIGatewaySimpleAuthorizerWithContextResult,
 } from "aws-lambda";
-import { jwtVerify, createRemoteJWKSet, JWTPayload } from "jose";
+import { jwtVerify, createRemoteJWKSet } from "jose";
 import { Resource } from "sst/resource";
+import { APIGatewayUserContextAuth } from "./types";
 
 const logger = new Logger({ serviceName: "gatewayAuthorizor" });
 
@@ -14,12 +15,6 @@ const issuer = `${Resource.LambdaAuth.url}`;
 
 // JWK Set for token verification
 const jwks = createRemoteJWKSet(new URL(jwksUri));
-
-// Custom type for API Gateway HTTP API v2 authorizer response
-type APIGatewayUserContextAuth = {
-  // context?: Record<string, string | number | boolean>;
-  organziationId?: string;
-};
 
 export const handler = async (
   event: APIGatewayRequestAuthorizerEventV2

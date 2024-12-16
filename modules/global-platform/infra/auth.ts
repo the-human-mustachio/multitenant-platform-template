@@ -17,7 +17,8 @@ import { globalPlatformTable } from "./storage";
 export const auth = new sst.aws.Auth("LambdaAuth", {
   authorizer: {
     timeout: "30 seconds",
-    handler: "modules/global-platform/packages/functions/src/auth2.handler",
+    handler:
+      "modules/global-platform/packages/functions/src/auth/auth2.handler",
     link: [globalPlatformTable, secrets.GoogleClientID],
   },
 });

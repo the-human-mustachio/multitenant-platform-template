@@ -1,4 +1,8 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyHandlerV2WithLambdaAuthorizer,
+  APIGatewayProxyResult,
+} from "aws-lambda";
 import { z } from "zod";
 import { APIRouter } from "./router";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
@@ -8,21 +12,26 @@ import { UserUseCases } from "@platform-organizations/core/useCases/userUseCases
 import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
 import { render } from "jsx-email";
 import { Template } from "./templates/email";
+import { APIGatewayUserContextAuth } from "./auth/types";
 
 // Lambda router handler
 const apiRouter = new APIRouter();
 
 // Define routes
 // =========== Route 1
-apiRouter.addRoute("GET", "/user/test", async ({ pathParams, queryParams }) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: `Success`,
-      queryParams,
-    }),
-  };
-});
+apiRouter.addRoute(
+  "GET",
+  "/user/test",
+  async ({ authContext, pathParams, queryParams }) => {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: `Success`,
+        queryParams,
+      }),
+    };
+  }
+);
 // =========== End Route 1
 
 // =========== Route 2
@@ -182,7 +191,7 @@ const listS3BucketContents = async (
 };
 
 export const handler = async (
-  event: APIGatewayProxyEvent
+  event: APIGatewayProxyHandlerV2WithLambdaAuthorizer<APIGatewayUserContextAuth>
 ): Promise<APIGatewayProxyResult> => {
   return apiRouter.routeRequest(event);
 };

@@ -1,6 +1,12 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyHandlerV2WithLambdaAuthorizer,
+  APIGatewayProxyResult,
+} from "aws-lambda";
+import { APIGatewayUserContextAuth } from "./auth/types";
 
 type Handler = (params: {
+  authContext: Record<string, string>;
   pathParams: Record<string, string>;
   queryParams: Record<string, string | undefined>;
   body: Record<string, string | undefined>;
@@ -20,7 +26,7 @@ export class APIRouter {
   }
 
   async routeRequest(
-    event: APIGatewayProxyEvent
+    event: APIGatewayProxyHandlerV2WithLambdaAuthorizer<APIGatewayUserContextAuth>
   ): Promise<APIGatewayProxyResult> {
     // Obtain method and path from requestContext.http if present (for HTTP API), otherwise from event (for REST API)
     const method = event.httpMethod || event.requestContext?.http?.method || "";
@@ -28,6 +34,7 @@ export class APIRouter {
     const queryStringParameters = event.queryStringParameters || {};
     const pathSegments = path.split("/").filter(Boolean);
     const body = event.body ? JSON.parse(event.body) : null;
+    const authContext = event.requestContext?.authorizer.lambda;
 
     for (const route of this.routes) {
       if (route.method !== method) continue;
@@ -52,6 +59,7 @@ export class APIRouter {
 
       if (isMatch) {
         return route.handler({
+          authContext,
           pathParams,
           queryParams: queryStringParameters,
           body,

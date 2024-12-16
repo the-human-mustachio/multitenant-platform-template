@@ -14,6 +14,13 @@ export default $config({
     };
   },
   async run() {
+    $transform(sst.aws.Function, (args, opts) => {
+      // Set the default if it's not set by the component
+      args.runtime ??= "nodejs22.x";
+      args.logging ??= { retention: "1 week" };
+      args.memory ??= "512 MB";
+      args.timeout ??= "30 seconds";
+    });
     const {
       globalPlatformApi,
       globalPlatformBucket,

@@ -4,15 +4,6 @@ import { userOrgScoppedAssumeRole } from "./roles";
 import { globalPlatformBucket, globalPlatformTable } from "./storage";
 
 export const globalPlatformApi = new sst.aws.ApiGatewayV2("GlobalPlatformApi", {
-  transform: {
-    route: {
-      handler: (args, opts) => {
-        (args.memory ??= "512 MB"),
-          ((args.logging = { retention: "1 week" }),
-          (args.timeout = "30 seconds"));
-      },
-    },
-  },
   link: [
     globalPlatformBucket,
     userOrgScoppedAssumeRole,
@@ -26,7 +17,7 @@ const authorizer = globalPlatformApi.addAuthorizer({
   lambda: {
     function: {
       handler:
-        "modules/global-platform/packages/functions/src/gatewayAuthorizor.handler",
+        "modules/global-platform/packages/functions/src/auth/gatewayAuthorizor.handler",
       link: [auth],
     },
   },
@@ -37,13 +28,3 @@ globalPlatformApi.route(
   "modules/global-platform/packages/functions/src/routerHandler.handler",
   { auth: { lambda: authorizer.id } }
 );
-
-// globalPlatformApi.route("ANY /auth/{proxy+}", {
-//   link: [
-//     globalPlatformApi,
-//     auth.authenticator,
-//     secrets.GoogleClientID,
-//     globalPlatformTable,
-//   ],
-//   handler: "modules/global-platform/packages/functions/src/auth.wrapper",
-// });
