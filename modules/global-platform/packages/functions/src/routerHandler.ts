@@ -23,6 +23,7 @@ apiRouter.addRoute(
   "GET",
   "/user/test",
   async ({ authContext, pathParams, queryParams }) => {
+    console.log(authContext);
     return {
       statusCode: 200,
       body: JSON.stringify({

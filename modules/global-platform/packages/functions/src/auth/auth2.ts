@@ -1,14 +1,8 @@
 import { authorizer } from "@openauthjs/openauth";
 import { handle } from "hono/aws-lambda";
-import { DynamoStorage } from "@openauthjs/openauth/storage/dynamo";
 import { subjects } from "./subject";
 import { Resource } from "sst";
-import { PasswordAdapter } from "@openauthjs/openauth/adapter/password";
-import { PasswordUI } from "@openauthjs/openauth/ui/password";
 import { GoogleOidcAdapter } from "@openauthjs/openauth/adapter/google";
-import { CodeAdapter } from "@openauthjs/openauth/adapter/code";
-import { CodeUI } from "@openauthjs/openauth/ui/code";
-import { OidcAdapter } from "@openauthjs/openauth/adapter/oidc";
 import { CognitoAdapter } from "@openauthjs/openauth/adapter/cognito";
 
 const THEME_SPARKCX = {

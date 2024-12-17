@@ -42,11 +42,14 @@ export const handler = async (
     return {
       isAuthorized: true,
       context: {
-        organziationId: "123",
-        sub: payload.sub || "unknown",
-        username: (payload as any).username || "unknown",
-        roles: (payload as any).roles?.join(",") || "",
-        scope: payload.scope || "",
+        type: "user",
+        organziationId: payload.properties.organizationId,
+        userId: payload.properties.userId,
+        userEmail: payload.properties.userEmail,
+        sub: payload.sub || null,
+        // username: (payload as any).username || "unknown",
+        // roles: (payload as any).roles?.join(",") || "",
+        // scope: payload.scope || "",
       },
     };
   } catch (error: unknown) {
@@ -60,7 +63,7 @@ export const handler = async (
     // Return unauthorized response
     return {
       isAuthorized: false,
-      context: {},
+      context: null,
     };
   }
 };
