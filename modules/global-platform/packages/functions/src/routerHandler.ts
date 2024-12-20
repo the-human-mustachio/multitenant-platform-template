@@ -1,5 +1,4 @@
 import {
-  APIGatewayProxyEvent,
   APIGatewayProxyHandlerV2WithLambdaAuthorizer,
   APIGatewayProxyResult,
 } from "aws-lambda";

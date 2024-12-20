@@ -30,7 +30,6 @@ const THEME_SPARKCX = {
 
 const app = authorizer({
   theme: THEME_SPARKCX,
-  subjects,
   providers: {
     google: GoogleOidcAdapter({
       clientID: Resource.GoogleClientID.value,
@@ -49,24 +48,26 @@ const app = authorizer({
       clientSecret: "",
     }),
   },
+  subjects: subjects,
   allow: async (input) => {
     console.log(input);
     return true;
   },
   success: async (ctx, value) => {
-    let email: string;
-    let userId: string;
+    let email: string = "";
+    let userId: string = "";
     if (value.provider === "google") {
       console.log(value);
       console.log(JSON.stringify(ctx));
       email = value.id.email as string;
       userId = value.id.email as string;
+      return ctx.subject("user", {
+        email: email,
+        userId: userId,
+        organizationId: "123",
+      });
     }
-    return ctx.subject("user", {
-      email: value.id.email,
-      userId: value.id.email,
-      organizationId: "123",
-    });
+
     throw new Error("Invalid provider");
   },
 });
