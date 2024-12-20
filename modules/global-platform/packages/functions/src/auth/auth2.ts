@@ -65,6 +65,7 @@ const app = authorizer({
         email: email,
         userId: userId,
         organizationId: "123",
+        organizationName: "Org name",
       });
     }
 
