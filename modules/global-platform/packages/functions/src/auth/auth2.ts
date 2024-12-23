@@ -33,7 +33,6 @@ const app = authorizer({
   providers: {
     google: GoogleOidcAdapter({
       clientID: Resource.GoogleClientID.value,
-      //   clientSecret: "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",
       scopes: [
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/userinfo.profile",

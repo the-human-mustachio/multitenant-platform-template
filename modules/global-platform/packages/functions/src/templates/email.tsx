@@ -10,6 +10,7 @@ import {
     Section,
     Text
   } from 'jsx-email';
+import React from "react";
   
   
   export type TemplateProps = {
@@ -78,7 +79,7 @@ import {
         <Container style={container}>
           <Section style={box}>
             <Text style={paragraph}>This is our email body text</Text>
-            <Button style={button} href="https://example.com">
+            <Button style={button} href="https://example.com" height={0} width={0}>
               Hi {name}
             </Button>
             <Hr style={hr} />

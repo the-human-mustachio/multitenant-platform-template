@@ -1,36 +1,42 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import UserTablePage from './pages/UsersPage';
+import AuthComponent from "./components/AuthComponent";
+import ProtectedRoute from "./components/ProtectedRouteComponent";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import ProtectedInfo from "./pages/ProtectedInfo";
+import LoginPage from "./pages/LoginPage";
+import CallbackHandler from "./components/CallbackHandlerComponent";
 
-
-const HomePage: React.FC = () => (
-  <div style={{ padding: '20px' }}>
-    <h1>Welcome to My Application</h1>
-    <p>This is the home page.</p>
-  </div>
-);
-
-const App: React.FC = () => {
+const App = () => {
   return (
-    <Router>
-      <Header />
-      <div
-        style={{
-          paddingTop: '64px', // Ensure content appears below the header
-          display: 'flex',    // Enable Flexbox
-          flexDirection: 'column',
-          justifyContent: 'top', // Center content vertically
-          alignItems: 'center',     // Center content horizontally
-          minHeight: '100vh',       // Full viewport height
-        }}
-      >
+    // <AuthProvider>
+    <>
+      <AuthComponent />
+      <Router>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/users" element={<UserTablePage />} />
+          {/* Login Route - Public */}
+          {/* <Route path="/code" element={<CallbackHandler />} /> */}
+          <Route path="/callback" element={<CallbackHandler />} />
+          <Route path="/login" element={<LoginPage />} />
+          {/* Protected Routes - Only accessible when authenticated */}
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <ProtectedInfo /> {/* This is the protected page */}
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Add other protected routes here */}
+          {/* Catch-all Route for any unrecognized paths */}
+          <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
-      </div>
-    </Router>
+      </Router>
+    </>
   );
 };
 
