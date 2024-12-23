@@ -21,8 +21,8 @@ const Header: React.FC = () => {
           </Box>
         ) : (
           <Button color="inherit" onClick={login}>
-          Login
-        </Button>
+            Login
+          </Button>
         )}
       </Toolbar>
     </AppBar>

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Box, Button, Menu, MenuItem, Typography } from "@mui/material";
+import { Box, Menu, MenuItem, Typography } from "@mui/material";
 import { useAuth } from "../auth/AuthContext";
 
 const UserComponent: React.FC = () => {
   const { userInfo, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  // console.log(userInfo)
+
   if (!userInfo) {
     return null; // Don't render if the user is not authenticated
   }
@@ -24,13 +24,15 @@ const UserComponent: React.FC = () => {
         onClick={handleClick}
         sx={{
           cursor: "pointer",
-          fontWeight: "bold",
+          fontWeight: "reqular",
           display: "inline-block",
         }}
         role="button"
         tabIndex={0}
       >
-        {userInfo.properties.email}
+        User: {userInfo.properties.email}
+        <br />
+        Organziation: {userInfo.properties.organizationId}
       </Typography>
       <Menu
         anchorEl={anchorEl}
@@ -38,11 +40,11 @@ const UserComponent: React.FC = () => {
         onClose={handleClose}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "center",
+          horizontal: "left", // Align to the left
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: "center",
+          horizontal: "left", // Align to the left
         }}
       >
         <MenuItem
