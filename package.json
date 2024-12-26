@@ -24,12 +24,12 @@
     "@aws-sdk/client-s3": "^3.696.0",
     "@aws-sdk/client-sesv2": "^3.699.0",
     "@aws-sdk/lib-dynamodb": "^3.685.0",
-    "@openauthjs/openauth": "^0.2.5",
+    "@openauthjs/openauth": "^0.2.6",
     "dynamodb-onetable": "^2.7.5",
     "jose": "^5.9.6",
     "jsx-email": "^2.3.5",
     "jwks-rsa": "^3.1.0",
-    "sst": "3.4.26",
+    "sst": "3.4.31",
     "ulid": "^2.3.0",
     "zod": "^3.24.1"
   }
