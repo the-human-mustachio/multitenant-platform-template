@@ -16,3 +16,6 @@ node_modules
 
 # misc
 .DS_Store
+
+# Draw.io backup files
+.bkp

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../auth/AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 
 const CallbackHandler: React.FC = () => {
   const { isAuthenticating } = useAuth();

@@ -16,8 +16,8 @@ export const schema = {
   },
   models: {
     Organization: {
-      pk: { type: String, value: "${id}#org" },
-      sk: { type: String, value: "org#" },
+      pk: { type: String, value: "${id}#organization" },
+      sk: { type: String, value: "organization#${id}" },
       id: {
         type: String,
         // generate: "ulid",
@@ -25,12 +25,12 @@ export const schema = {
       },
       name: { type: String, required: true },
       status: { type: String, default: "active", enum: ["active", "inactive"] },
-      adminGSI1pk: { type: String, value: "organization" },
-      adminGSI1sk: { type: String, value: "organization#${id}" },
+      adminGSI1pk: { type: String, value: "${_type}" },
+      adminGSI1sk: { type: String, value: "${sk}" },
     },
     User: {
       pk: { type: String, value: "${id}#user" },
-      sk: { type: String, value: "user#" },
+      sk: { type: String, value: "user#${id}" },
       id: {
         type: String,
         // generate: "ulid",
@@ -46,8 +46,8 @@ export const schema = {
       },
       status: { type: String, default: "active", enum: ["active", "inactive"] },
       defaultOrg: { type: String, required: true },
-      adminGSI1pk: { type: String, value: "user" },
-      adminGSI1sk: { type: String, value: "user#${id}" },
+      adminGSI1pk: { type: String, value: "${_type}" },
+      adminGSI1sk: { type: String, value: "${sk}" },
     },
     Membership: {
       pk: { type: String, value: "shared#${email}#membership" },
@@ -61,8 +61,8 @@ export const schema = {
         required: true,
       },
       role: { type: String, default: "user", required: true },
-      gsi1pk: { type: String, value: "shared#${organizationId}#org" },
-      gs1isk: { type: String, value: "membership#${email}" },
+      adminGSI1pk: { type: String, value: "${_type}" },
+      adminGSI1sk: { type: String, value: "${sk}" },
     },
   },
   params: {
@@ -97,14 +97,17 @@ export namespace DynamoDBAdapter {
       try {
         console.log("User upsert successfully in DynamoDB with OneTable.");
         console.log(user);
-        return (await UserModel.upsert({
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          status: user.status,
-          defaultOrg: user.defaultOrg,
-        })) as UserEntityDTO;
+        return (await UserModel.upsert(
+          {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            status: user.status,
+            defaultOrg: user.defaultOrg,
+          },
+          { return: "get" }
+        )) as UserEntityDTO;
       } catch (error) {
         console.error("Error upsert user in DynamoDB with OneTable:", error);
         console.error(JSON.stringify(error, null, 4));
@@ -208,3 +211,14 @@ export namespace DynamoDBAdapter {
     };
   };
 }
+
+(async () => {
+  try {
+    const r = DynamoDBAdapter.getUserByEmail();
+    console.log(await r("matt@sparkcx.co"));
+    console.log("done");
+  } catch (e) {
+    // Deal with the fact the chain failed
+  }
+  // `text` is not available here
+})();

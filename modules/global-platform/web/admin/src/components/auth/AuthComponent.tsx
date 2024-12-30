@@ -1,5 +1,5 @@
-import { useAuth } from "../auth/AuthContext";
-import Header from "./HeaderComponent"; // Material-UI Header component
+import { useAuth } from "../../auth/AuthContext";
+import Header from "../HeaderComponent"; // Material-UI Header component
 
 interface AuthComponentProps {
   header?: React.ReactNode; // Customizable header

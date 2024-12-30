@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   async function auth() {
     const token = await getToken();
     // console.log("Token in auth:", token); // Check if the token is being retrieved
-    // setIsAuthenticating(false);
+    setIsAuthenticating(true);
 
     if (token) {
       accessToken.current = token;
@@ -182,6 +182,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const decoded: any = jwtDecode(accessToken.current); // Decode JWT
         setUserInfo(decoded); // Set user info with decoded data
         setUserId(decoded.sub); // Set user ID (or whatever field represents the user ID)
+        setIsAuthenticating(false);
       } catch (error) {
         console.error("Error decoding token:", error); // Error handling
       }
